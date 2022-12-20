@@ -5,7 +5,7 @@ import styled from "styled-components";
 const ButtonComponent = ({enabled}) => {
   return (
     <ButtonContainer>
-      <button style={{color: enabled ? 'lightgray': 'blue'  , backgroundColor : enabled ? 'blue': 'lightgray'}}>Next</button>
+      <button disabled={!enabled} style={{color: enabled ? 'lightgray': 'blue'  , backgroundColor : enabled ? 'blue': 'lightgray'}}>Next</button>
     </ButtonContainer>
   );
 };

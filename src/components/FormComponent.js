@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate} from 'react-router-dom'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ButtonComponent from "./ButtonComponent";
 import InputComponent from "./InputComponent";
 import TermsComponent from "./TermsComponent";
 
-import axios from 'axios'
+import axios from "axios";
 
 const FormComponent = () => {
-  const baseUrl = 'https://reqres.in/api/';
+  const baseUrl = "https://reqres.in/api/";
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,30 +32,42 @@ const FormComponent = () => {
     setIsChecked(!isChecked);
   };
 
-  const login = async (data)=>{
-    let response = await axios.post(`${baseUrl}login` , data)
-    navigate('/user', {state: {data: response.data}})
-  }
+  const showToast = (data) => {
+    toast.error({data}, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 3000,
+    });
+  };
+
+  const login = async (data) => {
+    let response = await axios.post(`${baseUrl}login`, data);
+    // if(response.response.status === 400){
+    //   // showToast(response.response.data.error)
+    //   response.response.data
+    // }
+    navigate("/user", { state: { data: response.data } });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     let data = {
       email: email,
-      password: password
-    }
+      password: password,
+    };
 
-    login(data)
+    login(data);
     setEmail("");
     setPassword("");
+    setIsChecked(false)
   };
 
   useEffect(() => {
-    if (isChecked && email !== '' && password !== '') {
+    if (isChecked && email !== "") {
       setIsEnabled(true);
-    }else{
-      setIsEnabled(false)
+    } else {
+      setIsEnabled(false);
     }
-  }, [isChecked]);
+  }, [isChecked, email]);
 
   return (
     <FormContainer>
@@ -75,6 +89,7 @@ const FormComponent = () => {
             {/* <InputComponent types="checkbox" /> */}
             <input
               type="checkbox"
+              checked = {isChecked}
               onChange={toggleCheckbox}
               style={{ width: "20px", margin: 0 }}
             />
@@ -85,6 +100,7 @@ const FormComponent = () => {
         </div>
         <ButtonComponent enabled={isEnabled} />
       </form>
+      <ToastContainer />
     </FormContainer>
   );
 };
